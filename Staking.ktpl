@@ -1,0 +1,41 @@
+pragma kadena 0.9.2
+
+contract Staking {
+    
+    address owner;
+    mapping(address => uint) playerScores;
+    uint maxScore;
+
+    // Initialize the activity with the given properties
+    function Staking(uint _maxScore) public {
+        owner = msg.sender;
+        maxScore = _maxScore;
+    }
+
+    // Allows a player to add points to their score
+    function addPoints(uint points) public {
+        require(msg.sender != owner);
+        playerScores[msg.sender] += points;
+    }
+
+    // Allows a player to view their current score
+    function viewScore() public view returns (uint) {
+        return playerScores[msg.sender];
+    }
+
+    // Allows the owner to end the event and determine the winner
+    function endStaking() public {
+        require(msg.sender == owner);
+        address winner;
+        uint highestScore = 0;
+        for (address player in playerScores) {
+            if (playerScores[player] > highestScore) {
+                highestScore = playerScores[player];
+                winner = player;
+            }
+        }
+        emit Winner(winner, highestScore);
+    }
+
+    event Winner(address winner, uint highestScore);
+}

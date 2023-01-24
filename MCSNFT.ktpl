@@ -1,0 +1,25 @@
+pragma kadena 0.9.2
+
+contract MCSitems {
+    // Define the properties of the NFT
+    address owner;
+    string name;
+    bytes32 imageHash;
+
+    function MCSitems(string _name, bytes32 _imageHash) public {
+        owner = msg.sender;
+        name = _name;
+        imageHash = _imageHash;
+    }
+
+   
+    function transfer(address _newOwner) public {
+        require(msg.sender == owner);
+        owner = _newOwner;
+    }
+
+   
+    function getInfo() public view returns (address, string, bytes32) {
+        return (owner, name, imageHash);
+    }
+}
